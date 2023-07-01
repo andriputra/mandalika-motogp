@@ -45,6 +45,7 @@ const DataTable = () => {
 			const username = customerData.name;
 			const displayPhoneNumber = hidePhoneNumber(customerData.mobileNumber);
 			const point = customerData.point;
+			const lap = Math.floor(point / 10) + 1;
 
 			tableRows.push(
 				<tr key={i} className={isYourPosition ? 'in-your-position' : ''}>
@@ -52,7 +53,7 @@ const DataTable = () => {
 					<td className="username-pos">{username}</td>
 					<td>{displayPhoneNumber}</td>
 					<td>
-						<div className="user-point">{point}</div>
+						<div className="user-point">{lap}</div>
 					</td>
 				</tr>
 			);
@@ -81,7 +82,7 @@ const DataTable = () => {
 						<th>Pos</th>
 						<th>Username</th>
 						<th>Mobile Number</th>
-						<th>Point</th>
+						<th>Lap</th>
 					</tr>
 				</thead>
 				<tbody>{renderTableRows()}</tbody>
