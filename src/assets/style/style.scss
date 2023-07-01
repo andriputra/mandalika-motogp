@@ -48,6 +48,19 @@ body{
     .table-area{
         margin: 40px 0px 20px;
     }
+		.alert{
+			position: absolute;
+			top: 10%;
+			left: 12.5%;
+			width: 75%;
+			font-size: 12px;
+			padding: 8px 30px 8px 8px;
+			color: #2e9f43;
+			font-family: 'Roboto', sans-serif;
+			&.alert-danger{
+				color: #cc0b06;
+			}
+		}
 }
 img{
     max-width: 100%;
@@ -61,7 +74,60 @@ img{
 	background-color: white;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.modal-body{
-	background: #a90301c7;
-  color: #ffffff;
-} 
+.modal-dialog{
+	.modal-content{
+		font-size: 13px;
+    font-family: 'Roboto', sans-serif;
+		.modal-header{
+			background: rgb(169, 3, 1);
+			padding: 10px;
+			h5{
+				font-size: 16px;
+				color: #ffffff;
+			}
+			.btn-close{
+				color: #ffffff;
+			}
+		}
+		.modal-body{
+			font-size: 13px;
+			padding: 20px 10px;
+			text-align: center;
+			font-weight: 500;
+			span{
+				&.main-info{
+					font-size: 16px;
+				}
+				&.desc-info{
+					font-weight: 300;
+				}
+			}
+			table{
+				margin-bottom: 0px;
+				&.table{
+					text-align: left;
+					tr{
+						td{
+							&:first-child{
+								width: 23%;
+							}
+						}
+					}
+				}
+			}
+		}
+		.modal-footer{
+			font-size: 13px;
+			padding: 0px 10px 10px;
+			margin: 0px;
+			border-top: 0px;
+			justify-content: space-between;
+			button{
+				flex: auto;
+				font-family: 'Roboto', sans-serif;
+				font-size: 14px;
+				font-weight: 500;
+			}
+		}
+	}
+}

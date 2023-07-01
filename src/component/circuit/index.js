@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ImgCircuit from '../../assets/img/circuit-mandalika.png';
 import PathCircuit from '../layout/pathCircuitMandalika';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import anime from 'animejs';
@@ -84,14 +84,28 @@ const Circuit = () => {
 			</div>
 			<PathCircuit />
 			<Modal isOpen={showModal} toggle={() => setShowModal(false)}>
-				<ModalHeader toggle={() => setShowModal(false)}>Keterangan</ModalHeader>
+				<ModalHeader toggle={() => setShowModal(false)}>Posisi Anda Saat Ini</ModalHeader>
 				<ModalBody>
-					<p>Posisi Anda : {customerInfo.code}</p>
-					<p>Jumlah Lap : {customerInfo.lapCount}</p>
-					<p>Sisa Point : {customerInfo.point}</p>
+					<Table borderless>
+						<tr>
+							<td>Posisi Anda </td>
+							<td>:</td>
+							<td>{customerInfo.position}</td>
+						</tr>
+						<tr>
+							<td>Jumlah Lap</td>
+							<td>:</td>
+							<td>{customerInfo.lapCount}</td>
+						</tr>
+						<tr>
+							<td>Sisa Poin </td>
+							<td>:</td>
+							<td>{customerInfo.point}</td>
+						</tr>
+					</Table>
 				</ModalBody>
 			</Modal>
-		</div>
+		</div >
 	);
 }
 
