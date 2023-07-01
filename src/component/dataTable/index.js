@@ -43,14 +43,14 @@ const DataTable = () => {
 			if (i === 5 || i === 6) continue;
 			const isYourPosition = i === 7;
 			const username = customerData.name;
-			const phoneNumber = hidePhoneNumber(customerData.mobileNumber, i);
+			const displayPhoneNumber = hidePhoneNumber(customerData.mobileNumber);
 			const point = customerData.point;
 
 			tableRows.push(
 				<tr key={i} className={isYourPosition ? 'in-your-position' : ''}>
 					<td>{i + 1}</td>
 					<td className="username-pos">{username}</td>
-					<td id="phone-number">{phoneNumber}</td>
+					<td>{displayPhoneNumber}</td>
 					<td>
 						<div className="user-point">{point}</div>
 					</td>
@@ -60,9 +60,14 @@ const DataTable = () => {
 		return tableRows;
 	};
 
-	const hidePhoneNumber = (phoneNumber, i) => {
-		// Implement your hidePhoneNumber logic here
-		return phoneNumber;
+	const hidePhoneNumber = (phoneNumber) => {
+		if (phoneNumber.length >= 5) {
+			const hiddenDigits = '*'.repeat(phoneNumber.length - 5);
+			const visibleDigits = phoneNumber.slice(-3);
+			return `${phoneNumber.slice(0, 2)}${hiddenDigits}${visibleDigits}`;
+		} else {
+			return phoneNumber;
+		}
 	};
 
 	return (

@@ -86,7 +86,7 @@ const Circuit = () => {
 			<Modal isOpen={showModal} toggle={() => setShowModal(false)}>
 				<ModalHeader toggle={() => setShowModal(false)}>Keterangan</ModalHeader>
 				<ModalBody>
-					<p>Posisi Anda : {customerInfo.position}</p>
+					<p>Posisi Anda : {customerInfo.code}</p>
 					<p>Jumlah Lap : {customerInfo.lapCount}</p>
 					<p>Sisa Point : {customerInfo.point}</p>
 				</ModalBody>

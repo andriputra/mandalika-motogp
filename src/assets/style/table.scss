@@ -37,9 +37,11 @@
 					div{
 						&.user-point{
 							background-color: #cc0b06;
-							display: inline-table;
+							display: inline-block;
 							width: 100%;
 							border-radius: 5px;
+							padding: 2px 7px;
+							font-size: 12px;
 						}
 					}
 				}
