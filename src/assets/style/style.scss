@@ -3,6 +3,26 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+.bg-default-non-mobile{
+	background-image: url('../img/bg-big.jpeg');
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding-top: 80px;
+	padding-bottom: 40px;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 100vh;
+	position: relative;
+	h2{
+		text-align: center;
+		color: #ffffff;
+		position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	}
+}
 .box-order{
     background-image: url('../img/bg-big.jpeg');
     background-position: top center;
