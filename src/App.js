@@ -10,7 +10,6 @@ import pertaminaGP from '../src/assets/img/pertamina-gp.png';
 import Circuit from './component/circuit';
 import Profile from './component/profile';
 import DataTable from './component/dataTable';
-// import '../src/server';
 
 class App extends Component {
   render() {
@@ -24,8 +23,8 @@ class App extends Component {
               </Col>
             </Row>
             <Row>
-              <Col xs='4'><Profile /></Col>
-              <Col xs='8'><Circuit /></Col>
+              <Col xs='5'><Profile /></Col>
+              <Col xs='7'><Circuit /></Col>
             </Row>
             <div className='table-area'>
               <Row>

@@ -9,7 +9,7 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
     padding-top: 80px;
-    padding-bottom: 80px;
+    padding-bottom: 40px;
     padding-left: 10px;
     padding-right: 10px;
     .banner{
@@ -23,11 +23,25 @@ body{
         border-radius: 5px 5px 5px 5px;
         width: 100%;
         margin-top: 10px;
+				border: none;
     }
     .table-area{
-        margin: 20px 0px;
+        margin: 40px 0px 20px;
     }
 }
 img{
     max-width: 100%;
 }
+.popup {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	background-color: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.modal-body{
+	background: #a90301c7;
+  color: #ffffff;
+} 

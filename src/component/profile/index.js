@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../assets/style/profile.scss';
 import photo from '../../assets/img/profile.jpeg';
 import { Button } from 'reactstrap';
+import apiConfig from '../../apiConfig';
 import axios from 'axios';
 
 const Profile = () => {
@@ -10,13 +11,16 @@ const Profile = () => {
 	const [sumPoint, setSumPoint] = useState('');
 
 	useEffect(() => {
-		const customerID = 'bf35ab62-b56d-4106-bd3c-2cb0ce1717fd';
-		axios
-			.get(`https://myptm-third-party-customer-api.vsan-apps.playcourt.id/third-party-customer/v1/customers/${customerID}`, {
-				headers: {
-					'X-API-KEY': 'ODU0YTVjYzYtNDNhYS00NjllLThmNGUtNmFjZWM2MGI1YjJm'
-				}
-			})
+		const customerID = apiConfig.customerID.custStaging;
+		const requestOptions = {
+			method: 'GET',
+			url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerID}`,
+			headers: {
+				'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
+			}
+		};
+
+		axios(requestOptions)
 			.then((response) => {
 				const data = response.data.data;
 				setName(data.name);
@@ -29,25 +33,31 @@ const Profile = () => {
 	}, []);
 
 	const handlePointDeduction = () => {
-		const body = {
-			id: 'bf35ab62-b56d-4106-bd3c-2cb0ce1717fd',
-			amount: 10,
-			reference: '3RDPARTYREFERENCE'
-		};
+		const customerId = apiConfig.customerID.custStaging;
+		const amount = 10;
+		const reference = '3RDPARTYREFERENCE';
 
-		axios
-			.post('https://myptm-third-party-management-command-service.vsan-apps.playcourt.id/third-party-management-command/v1/point-deduction', body, {
-				headers: {
-					'X-API-KEY': 'ODU0YTVjYzYtNDNhYS00NjllLThmNGUtNmFjZWM2MGI1YjJm'
-				}
-			})
+		const requestOptions = {
+			method: 'POST',
+			url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.pointDeduction}`,
+			headers: {
+				'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey,
+				'Content-Type': 'application/json'
+			},
+			data: {
+				id: customerId,
+				amount: amount,
+				reference: reference
+			}
+		};
+		console.log('customerID :', customerId);
+
+		axios(requestOptions)
 			.then((response) => {
 				console.log(response.data);
-				// Lakukan sesuatu setelah berhasil melakukan pengurangan poin
 			})
 			.catch((error) => {
-				console.log(error);
-				// Tangani kesalahan jika terjadi kesalahan dalam melakukan pengurangan poin
+				console.log('ini error:', error);
 			});
 	};
 

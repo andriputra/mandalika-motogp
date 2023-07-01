@@ -1,24 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from 'reactstrap';
 import '../../assets/style/table.scss';
+import apiConfig from '../../apiConfig';
+import axios from 'axios';
 
 const DataTable = () => {
-	const data = {
-		data: {
-			name: 'John Doe',
-			mobileNumber: '1234567890',
-			point: 100,
-		},
-	};
+	const [name, setName] = useState('');
+	const [phoneNumber, setPhoneNumber] = useState('');
+	const [sumPoint, setSumPoint] = useState('');
+	const [customerData, setCustomerData] = useState(null);
+
+	useEffect(() => {
+		const customerID = apiConfig.customerID.custStaging;
+		const requestOptions = {
+			method: 'GET',
+			url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerID}`,
+			headers: {
+				'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
+			}
+		};
+
+		axios(requestOptions)
+			.then((response) => {
+				const data = response.data.data;
+				setCustomerData(data);
+				setName(data.name);
+				setPhoneNumber(data.mobileNumber);
+				setSumPoint(data.point);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}, []);
 
 	const renderTableRows = () => {
+		if (!customerData) {
+			return null;
+		}
+
 		const tableRows = [];
 		for (let i = 0; i < 8; i++) {
 			if (i === 5 || i === 6) continue;
 			const isYourPosition = i === 7;
-			const username = data.data.name;
-			const phoneNumber = hidePhoneNumber(data.data.mobileNumber, i);
-			const point = data.data.point;
+			const username = customerData.name;
+			const phoneNumber = hidePhoneNumber(customerData.mobileNumber, i);
+			const point = customerData.point;
 
 			tableRows.push(
 				<tr key={i} className={isYourPosition ? 'in-your-position' : ''}>
@@ -57,7 +83,9 @@ const DataTable = () => {
 				<tfoot>
 					<tr>
 						<td colSpan={4}>
-							<a href="#" className='more-btn'>More</a>
+							<a href="#" className="more-btn">
+								More
+							</a>
 						</td>
 					</tr>
 				</tfoot>
