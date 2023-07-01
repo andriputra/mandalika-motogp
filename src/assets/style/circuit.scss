@@ -1,0 +1,56 @@
+.mandalika{
+    position: relative;
+    .circuit-mdlk {
+        position: absolute;
+        width: 100%;
+        img{
+            max-width: 100%;
+            height: auto;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+    }
+    .mandalika-circuit{
+        display: none;
+    }
+    .car {
+        width: 1.3rem;
+        height: 1.3rem;
+        position: absolute;
+        font-size: 0px;
+        text-align: center;
+        background-color: #ffffff;
+        top: -17px;
+        left: -17px;
+        border-radius: 50%;
+        border: 0.3rem solid #3c8fe4;
+        &#car-1{
+            border-color: #3c8fe4;
+        }
+        &#car-2{
+            border-color: #da4132;
+        }
+        &#car-3{
+            border-color: #17a05d;
+        }
+        &#car-4{
+            border-color: #813ce4;
+        }
+        &#car-5{
+            border-color: #fec449;
+        }
+        &#car-6{
+            border-color: #fe49fa;
+        }
+        &.current::after{
+            position: absolute;
+            content: 'You';
+            font-size: 8px;
+            font-weight: 900;
+            color: #ffffff;
+            bottom: 15px;
+            left: 0px;
+        }
+    }
+}
