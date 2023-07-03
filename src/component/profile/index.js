@@ -53,7 +53,8 @@ const Profile = () => {
 			url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.pointDeduction}`,
 			headers: {
 				'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey,
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Origin: 'https://localhost:3000'
 			},
 			data: {
 				id: customerId,
