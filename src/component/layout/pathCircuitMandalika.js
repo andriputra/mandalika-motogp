@@ -10,7 +10,7 @@ const PathCircuitMandalika = () => {
 	}
 	return (
 		<React.Fragment>
-			<svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" viewBox="0 0 590.906 738.062" id="MandalikaCircuit">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 590.906 738.062" id="MandalikaCircuit">
 				<g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
 					<g id="Desktop-Copy" className="mandalika-circuit">
 						<g id="circuit">
