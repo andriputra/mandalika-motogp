@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../assets/style/profile.scss';
 import photo from '../../assets/img/profile.jpeg';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Progress } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Progress, Input } from 'reactstrap';
 import apiConfig from '../../apiConfig';
 import axios from 'axios';
 
@@ -13,34 +13,46 @@ const Profile = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [customerId, setCustomerID] = useState('');
+  const [jumlahPoin, setJumlahPoin] = useState(10);
+  const [jumlahLap, setJumlahLap] = useState(1);
 
   useEffect(() => {
-	const urlParams = new URLSearchParams(window.location.search);
-	const customerIdParam = urlParams.get('customerId');
-	setCustomerID(customerIdParam);
-  
-	const requestOptions = {
-	  method: 'GET',
-	  url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerIdParam}`,
-	  headers: {
-		'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
-	  }
-	};
-  
-	axios(requestOptions)
-	  .then((response) => {
-		const data = response.data.data;
-		setName(data.name);
-		setPhoneNumber(data.mobileNumber);
-		setSumPoint(data.point);
-	  })
-	  .catch((error) => {
-		console.log(error);
-	  });
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerIdParam = urlParams.get('customerId');
+    setCustomerID(customerIdParam);
+
+    const requestOptions = {
+      method: 'GET',
+      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerIdParam}`,
+      headers: {
+        'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
+      }
+    };
+
+    axios(requestOptions)
+      .then((response) => {
+        const data = response.data.data;
+        setName(data.name);
+        setPhoneNumber(data.mobileNumber);
+        setSumPoint(data.point);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   const toggleModal = () => {
     setModal(!modal);
+  };
+
+  const handleSliderChange = (event) => {
+    const value = parseInt(event.target.value);
+    setJumlahPoin(value);
+    setJumlahLap(calculateLapAmount(value));
+  };
+
+  const calculateLapAmount = (poin) => {
+    return Math.floor(poin / 10);
   };
 
   const handlePointDeduction = () => {
@@ -48,24 +60,22 @@ const Profile = () => {
   };
 
   const confirmPointDeduction = () => {
-	const amount = 10;
-	const reference = '3RDPARTYREFERENCE';
+    const reference = '3RDPARTYREFERENCE';
   
-	const requestOptions = {
-	  method: 'POST',
-	  url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.pointDeduction}`,
-	  headers: {
-		'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey,
-		'Content-Type': 'application/json',
-		// Origin: 'https://localhost:3000'
-	  },
-	  data: {
-		id: customerId,
-		amount: amount,
-		reference: reference
-	  }
-	};
-
+    const requestOptions = {
+      method: 'POST',
+      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.pointDeduction}`,
+      headers: {
+        'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        id: customerId,
+        amount: jumlahPoin,
+        reference: reference
+      }
+    };
+  
     axios(requestOptions)
       .then((response) => {
         console.log(response.data);
@@ -74,6 +84,9 @@ const Profile = () => {
         setTimeout(() => {
           setShowSuccessAlert(false);
         }, 5000);
+  
+        // Mengurangi nilai sumPoint
+        setSumPoint(prevSumPoint => prevSumPoint - jumlahPoin);
       })
       .catch((error) => {
         toggleModal();
@@ -83,7 +96,7 @@ const Profile = () => {
         }, 5000);
       });
   };
-
+  
   const hidePhoneNumber = (phoneNumber) => {
     if (phoneNumber.length >= 5) {
       const hiddenDigits = '*'.repeat(phoneNumber.length - 5);
@@ -106,23 +119,29 @@ const Profile = () => {
           <div id="name">{name}</div>
           <div id="phoneNumber">{hidePhoneNumber(phoneNumber)}</div>
           <div className="sum-point" id="sumPoint">
-            Point: {sumPoint}
+            Poin MyPertamina: {sumPoint}
           </div>
           <div className="red-col label" id="Lap">
-            <span>LAP&nbsp;</span>200
+            <span>LAP&nbsp;</span>
+            {jumlahLap}
           </div>
         </div>
       </div>
       <Button className="btn-action" id="Redeem" onClick={handlePointDeduction}>
-        Tukar Point
+        Tukar Poin
       </Button>
 
       <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>Konfirmasi Tukar Point</ModalHeader>
+        <ModalHeader toggle={toggleModal}>Tukar Poin Turbo Ultimate Experience</ModalHeader>
         <ModalBody>
-          <span className="main-info">Apakah Anda yakin ingin menukar 10 poin dengan 1 lap?</span>
+          <span className="main-info">
+            Anda Akan Menukar {jumlahPoin} poin dengan {jumlahLap} lap
+          </span>
           <br />
-          <span className="desc-info">Proses ini akan mengurangi poin yang Anda miliki.</span>
+          <span className="desc-info">
+            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat ini : <strong>{sumPoint}</strong>
+          </span>
+          <input type="range" min="10" max="200" step="10" value={jumlahPoin} onChange={handleSliderChange} />
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={toggleModal}>
@@ -135,11 +154,11 @@ const Profile = () => {
       </Modal>
 
       <Alert color="success" isOpen={showSuccessAlert} toggle={() => setShowSuccessAlert(false)}>
-        Poin telah dikurangi dan dikonversi menjadi 1 lap!
+        Selamat Poin Anda sudah berhasil di konversi ke jumlah Lap
       </Alert>
 
       <Alert color="danger" isOpen={showErrorAlert} toggle={() => setShowErrorAlert(false)}>
-        Terjadi kesalahan saat melakukan pengurangan poin!
+        Mohon maaf saat ini belum dapat mengkonversi point
       </Alert>
     </React.Fragment>
   );

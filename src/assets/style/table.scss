@@ -50,6 +50,11 @@
 						background: #f3b5cb40;
 					}
 				}
+				&.separator-row td {
+					border-bottom: 1px solid #ccc;
+					padding: 0;
+					height: 10px;
+				}
 			}
 		}
 		tfoot{
