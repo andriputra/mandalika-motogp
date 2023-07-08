@@ -4,8 +4,12 @@ const apiConfig = {
             url: 'https://myptm-third-party-customer-api.vsan-apps.playcourt.id',
             apiKey: 'ODU0YTVjYzYtNDNhYS00NjllLThmNGUtNmFjZWM2MGI1YjJm'
         },
+        // STAGING: {
+        //     url: 'https://apistaging.my-pertamina.id',
+        //     apiKey: 'NWJmMGZkNmMtOWI0MC00YTU2LWJkMmEtZjNjZTliODYzNWFk'
+        // },
         STAGING: {
-            url: 'https://apistaging.my-pertamina.id',
+            url: 'https://api.theultimatebox.id/api',
             apiKey: 'NWJmMGZkNmMtOWI0MC00YTU2LWJkMmEtZjNjZTliODYzNWFk'
         },
         PROD: {
@@ -13,10 +17,15 @@ const apiConfig = {
             apiKey: 'YOUR_API_KEY'
         }
     },
+    // endpoints: {
+    //     customer: '/third-party-customer/v1/customers',
+    //     pointDeduction: '/third-party-management-command/v1/point-deduction',
+    //     pointAddition: '/third-party-management-command/v1/point-addition'
+    // },
     endpoints: {
-        customer: '/third-party-customer/v1/customers',
-        pointDeduction: '/third-party-management-command/v1/point-deduction',
-        pointAddition: '/third-party-management-command/v1/point-addition'
+        customer: '/balance',
+        pointDeduction: '/addition',
+        pointAddition: '/deduction'
     },
     customerID: {
         custDev: 'bf35ab62-b56d-4106-bd3c-2cb0ce1717fd',
