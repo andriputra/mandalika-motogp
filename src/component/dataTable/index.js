@@ -10,15 +10,19 @@ const DataTable = () => {
   const [sumPoint, setSumPoint] = useState("");
   const [customerData, setCustomerData] = useState(null);
   const [userPosition, setUserPosition] = useState(0);
+  const [customerId, setCustomerID] = useState('');
 
   useEffect(() => {
-    const customerID = apiConfig.customerID.custStaging;
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerIdParam = urlParams.get('customerId');
+    setCustomerID(customerIdParam);
+
     const requestOptions = {
       method: "GET",
-      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerID}`,
-      headers: {
-        "X-API-KEY": apiConfig.baseURLs.STAGING.apiKey,
-      },
+      rl: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerIdParam}`,
+      // headers: {
+      //   "X-API-KEY": apiConfig.baseURLs.STAGING.apiKey,
+      // },
     };
 
     axios(requestOptions)

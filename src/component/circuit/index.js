@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import ImgCircuit from '../../assets/img/circuit-mandalika.png';
+import imgCircuit from '../../assets/img/circuit-mandalika.png';
 import PathCircuit from '../layout/pathCircuitMandalika';
 import { Modal, ModalHeader, ModalBody, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import axios from 'axios';
 import anime from 'animejs';
 import '../../assets/style/circuit.scss';
-import apiConfig from '../../apiConfig';
 
 const Circuit = () => {
+
   useEffect(() => {
     var path = anime.path('#circuit path'),
       lapCounts = [0, 0, 0],
@@ -35,30 +34,6 @@ const Circuit = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const customerID = apiConfig.customerID.custStaging;
-    const requestOptions = {
-      method: 'GET',
-      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerID}`,
-      headers: {
-        'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
-      }
-    };
-
-    axios(requestOptions)
-      .then((response) => {
-        const data = response.data.data;
-        setCustomerInfo({
-          position: data.name,
-          lapCount: data.mobileNumber,
-          point: data.point
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   const [showModal, setShowModal] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     position: '',
@@ -72,7 +47,7 @@ const Circuit = () => {
   return (
     <div className='mandalika'>
       <div className="circuit-mdlk">
-        <img src={ImgCircuit} alt="Circuit Mandalika" />
+        <img src={imgCircuit} alt="Circuit Mandalika" />
       </div>
       <div className="cars">
         {[1, 2, 3, 4, 5].map((carNumber) => (

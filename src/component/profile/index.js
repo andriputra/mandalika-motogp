@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import '../../assets/style/profile.scss';
-import photo from '../../assets/img/profile.jpeg';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Progress, Input } from 'reactstrap';
-import apiConfig from '../../apiConfig';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import "../../assets/style/profile.scss";
+import userProfile from "../../assets/img/profile.jpeg";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Alert,
+} from "reactstrap";
+import axios from "axios";
 
 const Profile = () => {
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [sumPoint, setSumPoint] = useState('');
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [sumPoint, setSumPoint] = useState("");
   const [modal, setModal] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [customerId, setCustomerID] = useState('');
+  const [customerId, setCustomerID] = useState("");
   const [jumlahPoin, setJumlahPoin] = useState(10);
   const [jumlahLap, setJumlahLap] = useState(1);
 
   useEffect(() => {
+    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+    const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
+
     const urlParams = new URLSearchParams(window.location.search);
-    const customerIdParam = urlParams.get('customerId');
+    const customerIdParam = urlParams.get("customerId");
     setCustomerID(customerIdParam);
 
     const requestOptions = {
-      method: 'GET',
-      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerIdParam}`,
-      headers: {
-        'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey
-      }
+      method: "GET",
+      url: `${apiUrl}${apiEndpointBalance}?customerId=${customerIdParam}`,
+      
     };
-
     axios(requestOptions)
       .then((response) => {
         const data = response.data.data;
@@ -60,22 +66,24 @@ const Profile = () => {
   };
 
   const confirmPointDeduction = () => {
-    const reference = '3RDPARTYREFERENCE';
-  
+    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+    const apiEndpointDeduction = process.env.REACT_APP_ENDPOINT_DEDUCTION;
+
+    const reference = "3RDPARTYREFERENCE";
+
     const requestOptions = {
-      method: 'POST',
-      url: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.pointDeduction}`,
+      method: "POST",
+      url: `${apiUrl}${apiEndpointDeduction}`,
       headers: {
-        'X-API-KEY': apiConfig.baseURLs.STAGING.apiKey,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       data: {
         id: customerId,
         amount: jumlahPoin,
-        reference: reference
-      }
+        reference: reference,
+      },
     };
-  
+
     axios(requestOptions)
       .then((response) => {
         console.log(response.data);
@@ -84,9 +92,9 @@ const Profile = () => {
         setTimeout(() => {
           setShowSuccessAlert(false);
         }, 5000);
-  
+
         // Mengurangi nilai sumPoint
-        setSumPoint(prevSumPoint => prevSumPoint - jumlahPoin);
+        setSumPoint((prevSumPoint) => prevSumPoint - jumlahPoin);
       })
       .catch((error) => {
         toggleModal();
@@ -96,11 +104,13 @@ const Profile = () => {
         }, 5000);
       });
   };
-  
+
   const hidePhoneNumber = (phoneNumber) => {
     if (phoneNumber.length >= 5) {
-      const hiddenDigits = '*'.repeat(phoneNumber.length - 5);
-      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${phoneNumber.slice(-3)}`;
+      const hiddenDigits = "*".repeat(phoneNumber.length - 5);
+      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${phoneNumber.slice(
+        -3
+      )}`;
     } else {
       return phoneNumber;
     }
@@ -110,7 +120,7 @@ const Profile = () => {
     <React.Fragment>
       <div className="user-profile-box">
         <div className="user-image">
-          <img src={photo} alt="image-user" />
+          <img src={userProfile} alt="image-user" />
         </div>
         <div className="user-profile">
           <div className="point-user" id="Pos">
@@ -123,7 +133,7 @@ const Profile = () => {
           </div>
           <div className="red-col label" id="Lap">
             <span>LAP&nbsp;</span>
-            {jumlahLap}
+            0
           </div>
         </div>
       </div>
@@ -132,16 +142,26 @@ const Profile = () => {
       </Button>
 
       <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>Tukar Poin Turbo Ultimate Experience</ModalHeader>
+        <ModalHeader toggle={toggleModal}>
+          Tukar Poin Turbo Ultimate Experience
+        </ModalHeader>
         <ModalBody>
           <span className="main-info">
             Anda Akan Menukar {jumlahPoin} poin dengan {jumlahLap} lap
           </span>
           <br />
           <span className="desc-info">
-            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat ini : <strong>{sumPoint}</strong>
+            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat
+            ini : <strong>{sumPoint}</strong>
           </span>
-          <input type="range" min="10" max="200" step="10" value={jumlahPoin} onChange={handleSliderChange} />
+          <input
+            type="range"
+            min="10"
+            max="200"
+            step="10"
+            value={jumlahPoin}
+            onChange={handleSliderChange}
+          />
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={toggleModal}>
@@ -153,11 +173,19 @@ const Profile = () => {
         </ModalFooter>
       </Modal>
 
-      <Alert color="success" isOpen={showSuccessAlert} toggle={() => setShowSuccessAlert(false)}>
+      <Alert
+        color="success"
+        isOpen={showSuccessAlert}
+        toggle={() => setShowSuccessAlert(false)}
+      >
         Selamat Poin Anda sudah berhasil di konversi ke jumlah Lap
       </Alert>
 
-      <Alert color="danger" isOpen={showErrorAlert} toggle={() => setShowErrorAlert(false)}>
+      <Alert
+        color="danger"
+        isOpen={showErrorAlert}
+        toggle={() => setShowErrorAlert(false)}
+      >
         Mohon maaf saat ini belum dapat mengkonversi point
       </Alert>
     </React.Fragment>
