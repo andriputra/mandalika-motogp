@@ -1,91 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "reactstrap";
 import "../../assets/style/table.scss";
-import apiConfig from "../../apiConfig";
 import axios from "axios";
 
 const DataTable = () => {
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [sumPoint, setSumPoint] = useState("");
-  const [customerData, setCustomerData] = useState(null);
-  const [userPosition, setUserPosition] = useState(0);
-  const [customerId, setCustomerID] = useState('');
+  const [customerData, setCustomerData] = useState([]);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const customerIdParam = urlParams.get('customerId');
-    setCustomerID(customerIdParam);
+    fetchCustomerData(); 
 
-    const requestOptions = {
-      method: "GET",
-      rl: `${apiConfig.baseURLs.STAGING.url}${apiConfig.endpoints.customer}/${customerIdParam}`,
-      // headers: {
-      //   "X-API-KEY": apiConfig.baseURLs.STAGING.apiKey,
-      // },
+    const interval = setInterval(() => {
+      fetchCustomerData(); 
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
     };
+  }, []);
 
-    axios(requestOptions)
+  const fetchCustomerData = () => {
+    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+    const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
+
+    axios
+      .get(`${apiUrl}${apiEndpointPosition}`)
       .then((response) => {
         const data = response.data.data;
         setCustomerData(data);
-        setName(data.name);
-        setPhoneNumber(data.mobileNumber);
-        setSumPoint(data.point);
-
-        setUserPosition(data.position);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-
-  const renderTableRows = () => {
-    if (!customerData) {
-      return null;
-    }
-
-    const tableRows = [];
-    for (let i = 0; i < 8; i++) {
-      if (i === 5 || i === 6) {
-        if (userPosition > 5) {
-          tableRows.push(
-            <tr key={`separator-${i}`} className="separator-row">
-              <td colSpan={4}></td>
-            </tr>
-          );
-        }
-        continue;
-      }
-
-      const isYourPosition = i === 7;
-      const username = customerData.name;
-      const displayPhoneNumber = hidePhoneNumber(customerData.mobileNumber);
-      const point = customerData.point;
-      const lap = Math.floor(point / 10) + 1;
-
-      tableRows.push(
-        <tr key={i} className={isYourPosition ? "in-your-position" : ""}>
-          <td>{i + 1}</td>
-          <td className="username-pos">{username}</td>
-          <td>{displayPhoneNumber}</td>
-          <td>
-            <div className="user-point">{lap}</div>
-          </td>
-        </tr>
-      );
-    }
-    return tableRows;
   };
 
   const hidePhoneNumber = (phoneNumber) => {
     if (phoneNumber.length >= 5) {
       const hiddenDigits = "*".repeat(phoneNumber.length - 5);
-      const visibleDigits = phoneNumber.slice(-3);
-      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${visibleDigits}`;
+      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${phoneNumber.slice(
+        -3
+      )}`;
     } else {
       return phoneNumber;
     }
+  };
+  const renderTableRows = () => {
+    return customerData.map((customer, index) => (
+      <tr key={index} className={customer.position === 1 ? "in-your-position" : ""}>
+        <td>{customer.position}</td>
+        <td className="username-pos">{customer.username}</td>
+        <td>{hidePhoneNumber(customer.mobileNumber)}</td> {/* Memanggil hidePhoneNumber */}
+        <td>
+          <div className="user-point">{customer.lapCount}</div>
+        </td>
+      </tr>
+    ));
   };
 
   return (
