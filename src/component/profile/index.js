@@ -28,16 +28,16 @@ const Profile = () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL_STAGING;
         const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
-
+  
         const urlParams = new URLSearchParams(window.location.search);
         const customerIdParam = urlParams.get("customerId");
         setCustomerID(customerIdParam);
-
+  
         const requestOptions = {
           method: "GET",
           url: `${apiUrl}${apiEndpointBalance}?customerId=${customerIdParam}`,
         };
-
+  
         const response = await axios(requestOptions);
         const data = response.data.data;
         setName(data.name);
@@ -47,36 +47,43 @@ const Profile = () => {
         console.log(error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
-    const fetchCustomerData = () => {
+    const fetchCustomerData = (name) => {
       const apiUrl = process.env.REACT_APP_API_URL_STAGING;
       const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
-
+      
       axios
         .get(`${apiUrl}${apiEndpointPosition}`)
         .then((response) => {
           const data = response.data.data;
-          setCustomerData(data);
+          const updatedCustomerData = data.map((customer) => {
+            if (customer.username === name) {
+              return { ...customer, current: true };
+            } else {
+              return { ...customer, current: false };
+            }
+          });
+          setCustomerData(updatedCustomerData);
         })
         .catch((error) => {
           console.log(error);
         });
     };
-
-    fetchCustomerData();
-
+  
+    fetchCustomerData(name);
     const interval = setInterval(() => {
-      fetchCustomerData();
+      fetchCustomerData(name);
     }, 5000);
-
+  
     return () => {
       clearInterval(interval);
-    };
-  }, []);
+    }
+  }, [name]);
 
   const handleSliderChange = (event) => {
     const value = parseInt(event.target.value);
@@ -149,7 +156,9 @@ const Profile = () => {
   const hidePhoneNumber = (phoneNumber) => {
     if (phoneNumber.length >= 5) {
       const hiddenDigits = "*".repeat(phoneNumber.length - 5);
-      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${phoneNumber.slice(-3)}`;
+      return `${phoneNumber.slice(0, 2)}${hiddenDigits}${phoneNumber.slice(
+        -3
+      )}`;
     } else {
       return phoneNumber;
     }
@@ -164,9 +173,12 @@ const Profile = () => {
         <div className="user-profile">
           <div className="point-user" id="Pos">
             POS{" "}
-            {customerData.map((customer) => (
-              <span key={customer.id}>{customer.position}</span>
-            ))}
+            {customerData.map((customer) => {
+              if (customer.current) {
+                return <span className="mt-1" key={customer.username}>{customer.position}</span>;
+              }
+              return null;
+            })}
           </div>
           <div id="name">{name}</div>
           <div id="phoneNumber">{hidePhoneNumber(phoneNumber)}</div>
@@ -175,9 +187,12 @@ const Profile = () => {
           </div>
           <div className="red-col label" id="Lap">
             <span>LAP&nbsp;</span>
-            {customerData.map((customer) => (
-              <span key={customer.id}>{customer.lapCount}</span>
-            ))}
+            {customerData.map((customer) => {
+              if (customer.current) {
+                return <span key={customer.position}>{customer.lapCount}</span>;
+              }
+              return null;
+            })}
           </div>
         </div>
       </div>
@@ -195,8 +210,8 @@ const Profile = () => {
           </span>
           <br />
           <span className="desc-info">
-            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat ini :{" "}
-            <strong>{sumPoint}</strong>
+            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat
+            ini : <strong>{sumPoint}</strong>
           </span>
           <input
             type="range"

@@ -1,5 +1,5 @@
-.data-table{
-	.head-title{
+.data-table {
+	.head-title {
 		text-align: center;
 		margin-bottom: 0px;
 		color: #ffffff;
@@ -8,16 +8,20 @@
 		border-top-right-radius: 6px;
 		padding-top: 10px;
 		padding-bottom: 6px;
-		h2{
+
+		h2 {
 			margin-bottom: 0px;
 		}
 	}
-	.table{
+
+	.table {
 		background: #818181B3;
-		thead{
+
+		thead {
 			background: #cc0b06;
-			tr{
-				th{
+
+			tr {
+				th {
 					color: #ffffff;
 					background-color: #CC0707;
 					border: none;
@@ -26,16 +30,18 @@
 				}
 			}
 		}
-		tbody{
-			tr{
-				td{
+
+		tbody {
+			tr {
+				td {
 					font-size: 12px;
 					vertical-align: middle;
 					text-align: center;
 					color: #ffffff;
 					background: transparent;
-					div{
-						&.user-point{
+
+					div {
+						&.user-point {
 							background-color: #cc0b06;
 							display: inline-block;
 							width: 100%;
@@ -45,11 +51,13 @@
 						}
 					}
 				}
-				&.in-your-position{
-					td{
+
+				&.in-your-position {
+					td {
 						background: #f3b5cb40;
 					}
 				}
+
 				&.separator-row td {
 					border-bottom: 1px solid #ccc;
 					padding: 0;
@@ -57,12 +65,14 @@
 				}
 			}
 		}
-		tfoot{
-			tr{
-				td{
+
+		tfoot {
+			tr {
+				td {
 					background-color: transparent;
 					text-align: center;
-					.more-btn{
+
+					.more-btn {
 						background-color: #cc0b06;
 						display: inline-block;
 						width: 30%;
@@ -72,6 +82,8 @@
 						font-weight: 600;
 						color: #ffffff;
 						padding: 4px;
+						box-shadow: none;
+						border: none;
 					}
 				}
 			}
