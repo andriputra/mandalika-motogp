@@ -5,9 +5,37 @@ import { Modal, ModalHeader, ModalBody, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import anime from 'animejs';
 import '../../assets/style/circuit.scss';
+import axios from "axios";
 
 const Circuit = () => {
+  const [customerData, setCustomerData] = useState([]);
 
+  useEffect(() => {
+    fetchCustomerData(); 
+
+    const interval = setInterval(() => {
+      fetchCustomerData(); 
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const fetchCustomerData = () => {
+    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+    const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
+
+    axios
+      .get(`${apiUrl}${apiEndpointPosition}`)
+      .then((response) => {
+        const data = response.data.data;
+        setCustomerData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     var path = anime.path('#circuit path'),
       lapCounts = [0, 0, 0],
@@ -63,17 +91,16 @@ const Circuit = () => {
             <tr>
               <td>Posisi Anda</td>
               <td>:</td>
-              <td>8</td>
+              {customerData.map((customer) => (
+                <td key={customer.id}>{customer.position}</td>
+              ))}
             </tr>
             <tr>
               <td>Jumlah Lap</td>
               <td>:</td>
-              <td>200</td>
-            </tr>
-            <tr>
-              <td>Sisa Poin</td>
-              <td>:</td>
-              <td>{customerInfo.point}</td>
+              {customerData.map((customer) => (
+                <td key={customer.id}>{customer.lapCount}</td>
+              ))} 
             </tr>
           </Table>
         </ModalBody>
