@@ -5,34 +5,69 @@ import axios from "axios";
 
 const DataTable = () => {
   const [customerData, setCustomerData] = useState([]);
-  const [showMore, setShowMore] = useState(false); // State untuk mengontrol tombol "More"
+  const [showMore, setShowMore] = useState(false);
+  const [name, setName] = useState("");
+  const [customerId, setCustomerID] = useState("");
 
+  // GetCustomerId
   useEffect(() => {
-    fetchCustomerData();
+    const fetchData = async () => {
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+        const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerIdParam = urlParams.get("customerId");
+        setCustomerID(customerIdParam);
+
+        const requestOptions = {
+          method: "GET",
+          url: `${apiUrl}${apiEndpointBalance}?customerId=${customerIdParam}`,
+        };
+
+        const response = await axios(requestOptions);
+        const data = response.data.data;
+        setName(data.name);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Get Endpoint Position
+  useEffect(() => {
+    const fetchCustomerData = (name) => {
+      const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+      const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
+
+      axios
+        .get(`${apiUrl}${apiEndpointPosition}`)
+        .then((response) => {
+          const data = response.data.data;
+          const updatedCustomerData = data.map((customer) => {
+            if (customer.username === name) {
+              return { ...customer, current: true };
+            } else {
+              return { ...customer, current: false };
+            }
+          });
+          setCustomerData(updatedCustomerData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchCustomerData(name);
     const interval = setInterval(() => {
-      fetchCustomerData();
+      fetchCustomerData(name);
     }, 5000);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
-
-  const fetchCustomerData = () => {
-    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
-    const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
-
-    axios
-      .get(`${apiUrl}${apiEndpointPosition}`)
-      .then((response) => {
-        const data = response.data.data;
-        setCustomerData(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  }, [name]);
 
   const hidePhoneNumber = (phoneNumber) => {
     if (phoneNumber.length >= 5) {
@@ -44,29 +79,47 @@ const DataTable = () => {
   };
 
   const handleMoreClick = () => {
-    setShowMore((prevShowMore) => !prevShowMore); // Toggle nilai showMore saat tombol "More" atau "Less" ditekan
+    setShowMore((prevShowMore) => !prevShowMore);
   };
 
   const renderTableRows = () => {
-    let displayedData = customerData.slice(0, 5); // Hanya menampilkan 5 data secara default
-
+    let displayedData = customerData.slice(0, 5); // 5 data default
+  
     if (showMore) {
-      displayedData = customerData.slice(0, 50); // Menampilkan 50 data jika tombol "More" ditekan
+      displayedData = customerData; // all data
+    } else if (customerData.length > 5) {
+      const customerIndex = customerData.findIndex(
+        (customer) => customer.username === name
+      );
+      if (customerIndex > 5) {
+        const separator = { position: "separator" };
+        displayedData.splice(5, 0, separator);
+        displayedData.splice(6, 0, ...customerData.slice(customerIndex, customerIndex + 1));
+      }
     }
-
-    return displayedData.map((customer, index) => (
-      <tr
-        key={index}
-        className={customer.position === 1 ? "in-your-position" : ""}
-      >
-        <td>{customer.position}</td>
-        <td className="username-pos">{customer.username}</td>
-        <td>{hidePhoneNumber(customer.mobileNumber)}</td>
-        <td>
-          <div className="user-point">{customer.lapCount}</div>
-        </td>
-      </tr>
-    ));
+  
+    return displayedData.map((customer, index) => {
+      if (customer.position === "separator") {
+        return (
+          <tr key={index}>
+            <td colSpan={4} className="separator-row"></td>
+          </tr>
+        );
+      }
+  
+      const customerClass = customer.current ? "in-your-position" : "";
+  
+      return (
+        <tr key={index} className={customerClass}>
+          <td>{customer.position}</td>
+          <td className="username-pos">{customer.username}</td>
+          <td>{hidePhoneNumber(customer.mobileNumber)}</td>
+          <td>
+            <div className="user-point">{customer.lapCount}</div>
+          </td>
+        </tr>
+      );
+    });
   };
 
   return (

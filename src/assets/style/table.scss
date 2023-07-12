@@ -50,18 +50,18 @@
 							font-size: 12px;
 						}
 					}
+					&.separator-row {
+						border-top: 2px dashed #9b9b9b;
+						border-bottom: 2px dashed #9b9b9b;
+						padding: 0;
+						height: 10px;
+					}
 				}
 
 				&.in-your-position {
 					td {
 						background: #f3b5cb40;
 					}
-				}
-
-				&.separator-row td {
-					border-bottom: 1px solid #ccc;
-					padding: 0;
-					height: 10px;
 				}
 			}
 		}
