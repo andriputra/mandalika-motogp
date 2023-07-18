@@ -130,8 +130,8 @@ const DataTable = () => {
       <Table borderless>
         <thead>
           <tr>
-            <th>Pos</th>
-            <th>Username</th>
+            <th>Rank</th>
+            <th className="text-left">Username</th>
             <th>Mobile Number</th>
             <th>Lap</th>
           </tr>

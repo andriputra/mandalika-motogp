@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../assets/style/profile.scss";
-import userProfile from "../../assets/img/profile.jpeg";
+import userProfile from "../../assets/img/profile.png";
 import {
   Button,
   Modal,
@@ -22,22 +22,24 @@ const Profile = () => {
   const [jumlahPoin, setJumlahPoin] = useState(10);
   const [jumlahLap, setJumlahLap] = useState(1); // atau bisa menggunakan -1
   const [customerData, setCustomerData] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL_STAGING;
         const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
-  
+
         const urlParams = new URLSearchParams(window.location.search);
         const customerIdParam = urlParams.get("customerId");
         setCustomerID(customerIdParam);
-  
+
         const requestOptions = {
           method: "GET",
           url: `${apiUrl}${apiEndpointBalance}?customerId=${customerIdParam}`,
         };
-  
+
         const response = await axios(requestOptions);
         const data = response.data.data;
         setName(data.name);
@@ -47,16 +49,15 @@ const Profile = () => {
         console.log(error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   useEffect(() => {
     const fetchCustomerData = (name) => {
       const apiUrl = process.env.REACT_APP_API_URL_STAGING;
       const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
-      
+
       axios
         .get(`${apiUrl}${apiEndpointPosition}`)
         .then((response) => {
@@ -74,16 +75,26 @@ const Profile = () => {
           console.log(error);
         });
     };
-  
+
     fetchCustomerData(name);
     const interval = setInterval(() => {
       fetchCustomerData(name);
     }, 5000);
-  
+
     return () => {
       clearInterval(interval);
-    }
+    };
   }, [name]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((prevTimeLeft) => Math.max(prevTimeLeft - 1, 0));
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleSliderChange = (event) => {
     const value = parseInt(event.target.value);
@@ -100,7 +111,9 @@ const Profile = () => {
   };
 
   const handlePointDeduction = () => {
-    toggleModal();
+    if (!isButtonDisabled) {
+      toggleModal();
+    }
   };
 
   const confirmPointDeduction = () => {
@@ -143,6 +156,8 @@ const Profile = () => {
 
         // Mengurangi nilai sumPoint
         setSumPoint((prevSumPoint) => prevSumPoint - jumlahPoin);
+        setIsButtonDisabled(true);
+        setTimeLeft(600); // Menyimpan waktu tunggu 10 menit (600 detik)
       })
       .catch((error) => {
         toggleModal();
@@ -164,6 +179,26 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const interval = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    } else {
+      setIsButtonDisabled(false);
+    }
+  }, [timeLeft]);
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   return (
     <React.Fragment>
       <div className="user-profile-box">
@@ -175,7 +210,11 @@ const Profile = () => {
             POS{" "}
             {customerData.map((customer) => {
               if (customer.current) {
-                return <span className="mt-1" key={customer.username}>{customer.position}</span>;
+                return (
+                  <span className="mt-1" key={customer.username}>
+                    {customer.position}
+                  </span>
+                );
               }
               return null;
             })}
@@ -189,15 +228,30 @@ const Profile = () => {
             <span>LAP&nbsp;</span>
             {customerData.map((customer) => {
               if (customer.current) {
-                return <span key={customer.position}>{customer.lapCount}</span>;
+                return (
+                  <span key={customer.position}>{customer.lapCount}</span>
+                );
               }
               return null;
             })}
           </div>
         </div>
       </div>
-      <Button className="btn-action" id="Redeem" onClick={handlePointDeduction}>
-        Tukar Poin
+      <Button
+        className="btn-action"
+        id="Redeem"
+        onClick={handlePointDeduction}
+        disabled={isButtonDisabled}
+      >
+        {isButtonDisabled && timeLeft > 0 ? (
+          <span>
+            Tunggu {formatTime(timeLeft)}
+          </span>
+        ) : (
+          <span>
+            Tukar Poin
+          </span>
+        )}
       </Button>
 
       <Modal isOpen={modal} toggle={toggleModal}>
@@ -210,8 +264,8 @@ const Profile = () => {
           </span>
           <br />
           <span className="desc-info">
-            Proses ini akan mengurangi poin Mypertamina yang Anda miliki saat
-            ini : <strong>{sumPoint}</strong>
+            Proses ini akan mengurangi poin MyPertamina Anda, <br />
+            Poin saat ini : <strong>{sumPoint}</strong>
           </span>
           <input
             type="range"
@@ -237,7 +291,7 @@ const Profile = () => {
         isOpen={showSuccessAlert}
         toggle={() => setShowSuccessAlert(false)}
       >
-        Selamat Poin Anda sudah berhasil di konversi ke jumlah Lap
+        Selamat Poin Anda sudah berhasil di tukarkan
       </Alert>
 
       <Alert
@@ -245,7 +299,7 @@ const Profile = () => {
         isOpen={showErrorAlert}
         toggle={() => setShowErrorAlert(false)}
       >
-        Mohon maaf saat ini belum dapat mengkonversi point
+        Mohon maaf saat ini belum bisa menukarkan poin
       </Alert>
     </React.Fragment>
   );

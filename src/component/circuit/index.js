@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
 import imgCircuit from "../../assets/img/circuit-mandalika.png";
 import PathCircuit from "../layout/pathCircuitMandalika";
-import { Modal, ModalHeader, ModalBody, Table } from "reactstrap";
+// import { Modal, ModalHeader, ModalBody, Table } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import anime from "animejs";
 import "../../assets/style/circuit.scss";
-import axios from "axios";
+// import axios from "axios";
 
 const Circuit = () => {
-  const [customerData, setCustomerData] = useState([]);
+  // const [customerData, setCustomerData] = useState([]);
 
-  useEffect(() => {
-    fetchCustomerData();
+  // useEffect(() => {
+  //   fetchCustomerData();
 
-    const interval = setInterval(() => {
-      fetchCustomerData();
-    }, 5000);
+  //   const interval = setInterval(() => {
+  //     fetchCustomerData();
+  //   }, 5000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
-  const fetchCustomerData = () => {
-    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
-    const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
+  // const fetchCustomerData = () => {
+  //   const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+  //   const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
 
-    axios
-      .get(`${apiUrl}${apiEndpointPosition}`)
-      .then((response) => {
-        const data = response.data.data;
-        setCustomerData(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //   axios
+  //     .get(`${apiUrl}${apiEndpointPosition}`)
+  //     .then((response) => {
+  //       const data = response.data.data;
+  //       setCustomerData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   useEffect(() => {
     var path = anime.path("#circuit path"),
       lapCounts = [0, 0, 0],
@@ -62,15 +62,15 @@ const Circuit = () => {
     }
   }, []);
 
-  const [showModal, setShowModal] = useState(false);
-  const [customerInfo, setCustomerInfo] = useState({
-    position: "",
-    lapCount: "",
-    point: "",
-  });
-  const handleCarClick = () => {
-    setShowModal(true);
-  };
+  // const [showModal, setShowModal] = useState(false);
+  // const [customerInfo, setCustomerInfo] = useState({
+  //   position: "",
+  //   lapCount: "",
+  //   point: "",
+  // });
+  // const handleCarClick = () => {
+  //   setShowModal(true);
+  // };
 
   return (
     <div className="mandalika">
@@ -85,12 +85,12 @@ const Circuit = () => {
             id={`car-${carNumber}`}
           ></div>
         ))}
-        <div className="car current" id="car-6" onClick={handleCarClick}>
+        <div className="car current" id="car-6">
           YOU
         </div>
       </div>
       <PathCircuit />
-      <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
+      {/* <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
         <ModalHeader toggle={() => setShowModal(false)}>
           Posisi Anda Saat Ini
         </ModalHeader>
@@ -117,7 +117,7 @@ const Circuit = () => {
             </tr>
           </Table>
         </ModalBody>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
