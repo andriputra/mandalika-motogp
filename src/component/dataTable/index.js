@@ -13,7 +13,7 @@ const DataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+        const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
         const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -39,7 +39,7 @@ const DataTable = () => {
   // Get Endpoint Position
   useEffect(() => {
     const fetchCustomerData = (name) => {
-      const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+      const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
       const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
 
       axios

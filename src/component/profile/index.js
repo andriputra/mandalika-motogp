@@ -10,6 +10,7 @@ import {
   Alert,
 } from "reactstrap";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -28,7 +29,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+        const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
         const apiEndpointBalance = process.env.REACT_APP_ENDPOINT_BALANCE;
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -55,7 +56,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchCustomerData = (name) => {
-      const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+      const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
       const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
 
       axios
@@ -125,10 +126,10 @@ const Profile = () => {
       return;
     }
 
-    const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+    const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
     const apiEndpointDeduction = process.env.REACT_APP_ENDPOINT_DEDUCTION;
 
-    const reference = "3RDPARTYREFERENCE";
+    const reference = uuidv4();
 
     const requestOptions = {
       method: "POST",

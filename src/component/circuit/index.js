@@ -23,7 +23,7 @@ const Circuit = () => {
   // }, []);
 
   // const fetchCustomerData = () => {
-  //   const apiUrl = process.env.REACT_APP_API_URL_STAGING;
+  //   const apiUrl = process.env.REACT_APP_API_URL_PRODUCTION;
   //   const apiEndpointPosition = process.env.REACT_APP_ENDPOINT_POS;
 
   //   axios
