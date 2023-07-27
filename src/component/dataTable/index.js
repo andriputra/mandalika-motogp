@@ -78,6 +78,25 @@ const DataTable = () => {
     }
   };
 
+  const hideSingleWord = (word) => {
+    if (word.length >= 2) {
+      const hiddenLetters = "*".repeat(word.length - 2);
+      return `${word.slice(0, 2)}${hiddenLetters}`;
+    } else {
+      return word;
+    }
+  };
+  
+  const hideUsername = (username) => {
+    if (username) {
+      const words = username.split(" "); // Split the username into individual words
+      const hiddenUsername = words.map(hideSingleWord).join(" "); // Hide each word and join them back
+      return hiddenUsername;
+    } else {
+      return username;
+    }
+  };
+
   const handleMoreClick = () => {
     setShowMore((prevShowMore) => !prevShowMore);
   };
@@ -86,7 +105,8 @@ const DataTable = () => {
     let displayedData = customerData.slice(0, 5); // 5 data default
   
     if (showMore) {
-      displayedData = customerData; // all data
+      // Show all data but limit to the top 50 participants
+      displayedData = customerData.slice(0, 50);
     } else if (customerData.length > 5) {
       const customerIndex = customerData.findIndex(
         (customer) => customer.username === name
@@ -112,7 +132,7 @@ const DataTable = () => {
       return (
         <tr key={index} className={customerClass}>
           <td>{customer.position}</td>
-          <td className="username-pos">{customer.username}</td>
+          <td className="username-pos">{hideUsername(customer.username)}</td>
           <td>{hidePhoneNumber(customer.mobileNumber)}</td>
           <td>
             <div className="user-point">{customer.lapCount}</div>

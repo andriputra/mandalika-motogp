@@ -139,8 +139,8 @@ const Profile = () => {
       },
       data: {
         id: customerId,
-        name: name,
-        mobileNumber: phoneNumber,
+        // name: name,
+        // mobileNumber: phoneNumber,
         amount: jumlahPoin,
         lap: jumlahLap,
         reference: reference,
@@ -246,7 +246,7 @@ const Profile = () => {
       >
         {isButtonDisabled && timeLeft > 0 ? (
           <span>
-            Tunggu {formatTime(timeLeft)}
+            Tukar poin ke lap dalam : {formatTime(timeLeft)}
           </span>
         ) : (
           <span>
