@@ -89,8 +89,8 @@ const DataTable = () => {
   
   const hideUsername = (username) => {
     if (username) {
-      const words = username.split(" "); // Split the username into individual words
-      const hiddenUsername = words.map(hideSingleWord).join(" "); // Hide each word and join them back
+      const words = username.split(" "); 
+      const hiddenUsername = words.map(hideSingleWord).join(" "); 
       return hiddenUsername;
     } else {
       return username;
@@ -102,19 +102,20 @@ const DataTable = () => {
   };
 
   const renderTableRows = () => {
-    let displayedData = customerData.slice(0, 5); // 5 data default
+    let displayedData = customerData.slice(0, 10); 
   
     if (showMore) {
       // Show all data but limit to the top 50 participants
-      displayedData = customerData.slice(0, 50);
+      // displayedData = customerData.slice(0, 50);
+      displayedData = customerData;
     } else if (customerData.length > 5) {
       const customerIndex = customerData.findIndex(
         (customer) => customer.username === name
       );
       if (customerIndex > 5) {
         const separator = { position: "separator" };
-        displayedData.splice(5, 0, separator);
-        displayedData.splice(6, 0, ...customerData.slice(customerIndex, customerIndex + 1));
+        displayedData.splice(10, 0, separator);
+        displayedData.splice(11, 0, ...customerData.slice(customerIndex, customerIndex + 1));
       }
     }
   

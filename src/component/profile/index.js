@@ -21,7 +21,7 @@ const Profile = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [customerId, setCustomerID] = useState("");
   const [jumlahPoin, setJumlahPoin] = useState(10);
-  const [jumlahLap, setJumlahLap] = useState(1); // atau bisa menggunakan -1
+  const [jumlahLap, setJumlahLap] = useState(1); 
   const [customerData, setCustomerData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -167,6 +167,7 @@ const Profile = () => {
           setShowErrorAlert(false);
         }, 5000);
       });
+      console.log('ini code ref :', reference);
   };
 
   const hidePhoneNumber = (phoneNumber) => {
