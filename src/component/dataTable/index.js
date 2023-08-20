@@ -106,16 +106,16 @@ const DataTable = () => {
   
     if (showMore) {
       // Show all data but limit to the top 50 participants
-      // displayedData = customerData.slice(0, 50);
-      displayedData = customerData;
+      displayedData = customerData.slice(0, 110);
+      // displayedData = customerData;
     } else if (customerData.length > 5) {
       const customerIndex = customerData.findIndex(
         (customer) => customer.username === name
       );
       if (customerIndex > 5) {
         const separator = { position: "separator" };
-        displayedData.splice(10, 0, separator);
-        displayedData.splice(11, 0, ...customerData.slice(customerIndex, customerIndex + 1));
+        displayedData.splice(10, 0, separator); // limit show default 
+        displayedData.splice(11, 0, ...customerData.slice(customerIndex, customerIndex + 1)); //ypur position if after show default
       }
     }
   
